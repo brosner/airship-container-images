@@ -1,0 +1,21 @@
+name: build images
+on:
+  push:
+    branches: master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    – name: checkout code
+      uses: actions/checkout@v2
+    – name: install buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v1
+      with:
+        version: latest
+    – name: build kafka image
+      run: |
+        docker buildx build \
+          --tag brosner/kafka:latest \
+          --platform linux/amd64,linux/arm/v7,linux/arm64 \
+          ./kafka
