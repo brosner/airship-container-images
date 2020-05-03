@@ -1,4 +1,5 @@
-FROM fluent/fluentd:v1.10-debian-1
+ARG ARCH=
+FROM ${ARCH}fluentd:v1.9.1-debian-1.0
 
 USER root
 RUN buildDeps="sudo make gcc g++ libc-dev" \
