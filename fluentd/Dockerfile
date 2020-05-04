@@ -12,7 +12,7 @@ ENV FLUENTD_DISABLE_BUNDLER_INJECTION 1
 COPY Gemfile* /fluentd/
 RUN buildDeps="sudo make gcc g++ libc-dev libffi-dev build-essential autoconf automake libtool pkg-config" \
   runtimeDeps="krb5-kdc libsasl2-modules-gssapi-mit libsasl2-dev " \
-  && export DEBIAN_FRONTEND=noninteractive
+  && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends $buildDeps $runtimeDeps net-tools \
