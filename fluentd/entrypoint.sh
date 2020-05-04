@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ ! -d /var/log/fluentd ]]; then
+if [ ! -d /var/log/fluentd ]; then
   mkdir /var/log/fluentd
 fi
 
