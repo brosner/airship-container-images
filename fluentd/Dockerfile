@@ -1,5 +1,5 @@
 ARG ARCH=
-FROM ${ARCH}fluentd:v1.9.1-debian-1.0
+FROM ${ARCH}fluentd:v1.9-debian-1
 
 LABEL maintainer="Brian Rosner <brian@brosner.com>"
 USER root
@@ -36,3 +36,4 @@ ENV FLUENTD_CONF="fluent.conf"
 
 # overwrite ENTRYPOINT to run fluentd as root for /var/log / /var/lib
 ENTRYPOINT ["tini", "--", "/fluentd/entrypoint.sh"]
+CMD ["fluentd"]
