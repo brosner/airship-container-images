@@ -29,6 +29,8 @@ RUN buildDeps="sudo make gcc g++ libc-dev libffi-dev build-essential autoconf au
   && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem  \
   && ldd $(gem contents rdkafka | grep librdkafka.so) | grep libsasl2.so.2
 
+COPY entrypoint.sh /fluentd/entrypoint.sh
+
 ENV FLUENTD_OPT=""
 ENV FLUENTD_CONF="fluent.conf"
 
