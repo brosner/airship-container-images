@@ -1,0 +1,53 @@
+name: Build Images
+on:
+  push:
+    branches: master
+jobs:
+  build-kafka-amd64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: auth docker hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: docker build
+      run: docker build --build-arg ARCH=amd64 --tag brosner/kafka:amd64-latest ./kafka
+    - name: docker push
+      run: docker push brosner/kafka:amd64-latest
+  build-kafka-arm32v7:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: auth docker hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: docker build
+      run: docker build --build-arg ARCH=arm32v7 --tag brosner/kafka:arm32v7-latest ./kafka
+    - name: docker push
+      run: docker push brosner/kafka:arm32v7-latest
+  build-kafka-arm64v8:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: auth docker hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: docker build
+      run: docker build --build-arg ARCH=arm64v8 --tag brosner/kafka:arm64v8-latest ./kafka
+    - name: docker push
+      run: docker push brosner/kafka:arm64v8-latest
+    manifest-kafka:
+      runs-on: ubuntu-latest
+      needs:
+      - build-kafka-amd64
+      - build-kafka-arm32v7
+      - build-kafka-arm64v8
+      steps:
+      - name: docker manifest create
+        run: docker manifest create brosner/kafka:latest brosner/kafka:amd64-latest brosner/kafka:arm32v7-latest brosner/kafka:arm64v8-latest
+      - name: docker manifest annotate amd64
+        run: docker manifest annotate --arch amd64 brosner/kafka:amd64-latest brosner/kafka:latest
+      - name: docker manifest annotate arm32v7
+        run: docker manifest annotate --arch armv7 brosner/kafka:arm32v7-latest brosner/kafka:latest
+      - name: docker manifest annotate arm64v8
+        run: docker manifest annotate --arch arm64 brosner/kafka:arm64v8-latest brosner/kafka:latest
